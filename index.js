@@ -30,6 +30,7 @@ app.use(session({
     cookie : {
       maxAge:2*60*60*1000,
       sameSite:"none",
+      secure:true
     }
 }))
 
