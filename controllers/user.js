@@ -30,7 +30,7 @@ router.post('/login',(req,res)=>{
                 email:user.email,
                 id:user.id
             }
-            res.send("logged in")
+            res.json(req.session);
         } else {
             res.status(401).send("wrong password")
         }
