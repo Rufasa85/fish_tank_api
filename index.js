@@ -1,5 +1,6 @@
 var express = require('express');
-const cors=require("cors");
+const cors =require("cors");
+const session = require('express-session')
 // Sets up the Express App
 // =============================================================
 var app = express();
@@ -13,7 +14,19 @@ var db = require('./models');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(cors())
+app.use(cors({
+  origin:["http://localhost:3000"],
+  credentials:true
+}))
+
+app.use(session({
+    secret: "keyboard cat", 
+    resave: false, 
+    saveUninitialized: false,
+    cookie : {
+      maxAge:2*60*60*1000
+    }
+}))
 
 
 app.use('/',allRoutes);

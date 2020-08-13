@@ -12,30 +12,24 @@ router.get("/", (req, res) => {
 })
 
 router.post("/", (req, res) => {
-    db.Fish.create({
-        width: req.body.width,
-        name: req.body.name,
-        color: req.body.color
-    }).then(newFish => {
-        res.json(newFish)
-    }).catch(err => {
-        console.log(err);
-        res.status(500).end()
-    })
+    if(!req.session.user){
+        res.status(401).send("login required")
+    }
+    else {
+
+        db.Fish.create({
+            width: req.body.width,
+            name: req.body.name,
+            color: req.body.color
+        }).then(newFish => {
+            res.json(newFish)
+        }).catch(err => {
+            console.log(err);
+            res.status(500).end()
+        })
+    }
 })
 
-router.put("/feedall", (req, res) => {
-    db.Fish.update({
-        width: req.body.width
-    },{
-       
-    }).then(updatedFish => {
-        res.json(updatedFish)
-    }).catch(err => {
-        console.log(err);
-        res.status(500).end()
-    })
-})
 router.put("/:id", (req, res) => {
     db.Fish.update({
         width: req.body.width
