@@ -10,8 +10,8 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     User.associate = function (models) {
-        // add associations here
-        // ex:User.hasMany(models.BlogPost);
+        User.hasMany(models.Fish);
+        User.hasMany(models.Tank);
     };
     User.beforeCreate(function (user) {
         user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);

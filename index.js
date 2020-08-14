@@ -13,12 +13,23 @@ var db = require('./models');
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+//local config
 // app.use(cors({
 //   origin:["http://localhost:3000"],
 //   credentials:true
 // }))
-app.use(cors({
+// app.use(session({
+//     secret: "keyboard cat", 
+//     resave: false, 
+//     saveUninitialized: false,
+//     cookie : {
+//       maxAge:2*60*60*1000,
+//     }
+// }))
+
+//deployed config
+
+app.use(cors({ 
   origin:["https://fish-tank-react.herokuapp.com"],
   credentials:true
 }))
@@ -27,11 +38,11 @@ app.use(session({
     secret: "keyboard cat", 
     resave: false, 
     saveUninitialized: false,
-    proxy:true,
+     proxy:true,
     cookie : {
       maxAge:2*60*60*1000,
       sameSite:"none",
-      secure:true
+       secure:true
     }
 }))
 

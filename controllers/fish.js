@@ -11,8 +11,21 @@ router.get("/", (req, res) => {
     })
 })
 
+router.get('/:id', (req, res) => {
+    db.Fish.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(fish => {
+        res.json(fish)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).end()
+    })
+})
+
 router.post("/", (req, res) => {
-    if(!req.session.user){
+    if (!req.session.user) {
         res.status(401).send("login required")
     }
     else {
@@ -20,7 +33,9 @@ router.post("/", (req, res) => {
         db.Fish.create({
             width: req.body.width,
             name: req.body.name,
-            color: req.body.color
+            color: req.body.color,
+            TankId: req.body.TankId,
+            UserId: req.session.user.id
         }).then(newFish => {
             res.json(newFish)
         }).catch(err => {
@@ -31,9 +46,35 @@ router.post("/", (req, res) => {
 })
 
 router.put("/:id", (req, res) => {
+    db.Fish.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(fish => {
+        if (!req.session.user || fish.UserId !== req.session.user.id) {
+            return res.status(401).send('login required/ not your fish')
+        } else {
+            db.Fish.update({
+                width: req.body.width,
+                name: req.body.name,
+                color: req.body.color
+            }, {
+                where: {
+                    id: req.params.id
+                }
+            }).then(updatedFish => {
+                res.json(updatedFish)
+            }).catch(err => {
+                console.log(err);
+                res.status(500).end()
+            })
+        }
+    })
+})
+router.put("/grow/:id", (req, res) => {
     db.Fish.update({
-        width: req.body.width
-    },{
+        width: req.body.width,
+    }, {
         where: {
             id: req.params.id
         }
@@ -46,15 +87,25 @@ router.put("/:id", (req, res) => {
 })
 
 router.delete("/:id", (req, res) => {
-    db.Fish.destroy({
+    db.Fish.findOne({
         where: {
             id: req.params.id
         }
-    }).then(deletedFish => {
-        res.json(deletedFish)
-    }).catch(err => {
-        console.log(err);
-        res.status(500).end()
+    }).then(fish => {
+        if (!req.session.user || fish.UserId !== req.session.user.id) {
+            return res.status(401).send('login required/ not your fish')
+        } else {
+            db.Fish.destroy({
+                where: {
+                    id: req.params.id
+                }
+            }).then(deletedFish => {
+                res.json(deletedFish)
+            }).catch(err => {
+                console.log(err);
+                res.status(500).end()
+            })
+        }
     })
 })
 
