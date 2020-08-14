@@ -57,7 +57,8 @@ router.put("/:id", (req, res) => {
             db.Fish.update({
                 width: req.body.width,
                 name: req.body.name,
-                color: req.body.color
+                color: req.body.color,
+                TankId:req.body.TankId
             }, {
                 where: {
                     id: req.params.id
